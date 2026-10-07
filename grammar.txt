@@ -1,0 +1,39 @@
+<program> ::= <action>*
+<action> ::= <let> | <assign> | <input> | <output> | <loop>
+
+<let> ::= "!let" <var> (<num> | <var>)
+<assign> ::= "!assign" <var> ("!sum" | "!diff") (<var> | <num>) (<var> | <num>) 
+
+<input> ::= "!given" <var>          
+<output> ::= "!show" (<var> | <num>)
+
+<loop> ::= "!induct" (<var> | <num>) ("<" | ">" | "=") (<var> | <num>) <action>* "!qed"
+
+<var> ::= [a-zA-Z]+
+<num> ::= [0-9]+
+
+
+!given n
+!let a 0
+!let b 1
+!induct n > 0
+    !assign t !sum a b
+    !let a b
+    !let b t
+    !assign n !diff n 1
+!qed
+
+!show a
+
+-------------------------
+
+n = int(input());
+a = 0
+b = 1
+while n > 0:
+    t = a + b
+    a = b
+    b = t
+    n = n - 1
+
+print(a)
