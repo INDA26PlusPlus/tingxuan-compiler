@@ -48,13 +48,10 @@ class Parse:
 
     def peek(self):
         return self.tokens[self.position]
-    """
-    <program> ::= <action>*
-
-    """
 
     # KEYWORD, VAR, NUM, CMP
     def program(self):
+        # <program> ::= <action>*
         actions = []
         while True:
             kind, row, value = self.peek()
@@ -154,9 +151,25 @@ class Parse:
             else:
                 actions.append(self.action())
     
-        return ("INDUCT", value1, value2, value3, actions)
+        return ("INDUCT", value1, value2, value3, actions, "QED")
 
-    
+"""
+print my cool tree!
+[('GIVEN', 'n'), ('LET', 'a', '0'), ('LET', 'b', '1'), ('INDUCT', 'n', '>', '0', [('ASSIGN', 't', '!sum', 'a', 'b'), ('LET', 'a', 'b'), ('LET', 'b', 't'), ('ASSIGN', 'n', '!diff', 'n', '1')]), ('SHOW', 'a')]
+"""
+ 
+def print_tree(nodes, deep):
+    for j in nodes:
+        for k in range(len(j)):
+            i = j[k]
+            if isinstance(i, list):
+                print()
+                print_tree(i, deep+1)
+            else:
+                if k==0:
+                    print(" "*(deep), end="")
+                print(i, end=" ")
+        print()
 
 if __name__ == "__main__":
     #python3 main.py input.txt 
@@ -166,7 +179,8 @@ if __name__ == "__main__":
     with open(sys.argv[1]) as f:
         lines = f.readlines()
 
-    print(Parse(lexer(lines)).program())
+    tree = Parse(lexer(lines)).program()
+    print_tree(tree, 0)
 
 
 # TODO: add comments to my language?
