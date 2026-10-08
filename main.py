@@ -50,19 +50,36 @@ class Parse:
         return self.tokens[self.position]
     """
     <program> ::= <action>*
-    <action> ::= <let> | <assign> | <input> | <output> | <loop>
 
-    <loop> ::= "!induct" (<var> | <num>) ("<" | ">" | "=") (<var> | <num>) <action>* "!qed"
     """
 
     # KEYWORD, VAR, NUM, CMP
-    # def program(self):
-    #     if self.tokens[self.position]:
-    #         if self.peek() in KEYWORD:
-    #             pass
+    def program(self):
+        actions = []
+        while True:
+            kind, row, value = self.peek()
+            if kind != 'EOF':
+                actions.append(self.action())
+            else:
+                break
+        return actions
 
-    # def action(self):
-    #     pass
+    def action(self):
+        # <action> ::= <let> | <assign> | <input> | <output> | <loop>
+        kind, row, value = self.peek()
+        if value == '!let':
+            res = self.let()
+        elif value == '!assign':
+            res = self.assign()
+        elif value == '!given':
+            res = self.given()
+        elif value == '!show':
+            res = self.show()
+        elif value == '!induct':
+            res = self.loop()
+        else:
+            raise SyntaxError(f"error at row {row}: expected KEYWORD, found {value}")
+        return res
 
     # helper function to see if (<var> | <num>)
     def val_or_num(self):
@@ -111,7 +128,33 @@ class Parse:
         value = self.val_or_num()
         return ("SHOW", value)
 
+    def loop(self):
+        # <loop> ::= "!induct" (<var> | <num>) ("<" | ">" | "=") (<var> | <num>) <action>* "!qed"
+        pass
+        self.consume('KEYWORD','!induct')
+        value1 = self.val_or_num()
+
+        kind, row, value = self.peek()
+        if value == '<':
+            kind, row, value2 = self.consume('CMP','<')
+        elif value == '>':
+            kind, row, value2 = self.consume('CMP','>')
+        elif value == '=':
+            kind, row, value2 = self.consume('CMP','=')
+        else:
+            raise SyntaxError(f"error at row {row}, expected VAR or NUM, got {kind} '{value}'")
+
+        value3 = self.val_or_num()
+        actions = []
+        while True:
+            kind, row, value = self.peek()
+            if value == '!qed':
+                self.consume('KEYWORD','!qed')
+                break
+            else:
+                actions.append(self.action())
     
+        return ("INDUCT", value1, value2, value3, actions)
 
     
 
@@ -123,7 +166,7 @@ if __name__ == "__main__":
     with open(sys.argv[1]) as f:
         lines = f.readlines()
 
-    print(lexer(lines))
+    print(Parse(lexer(lines)).program())
 
 
 # TODO: add comments to my language?
