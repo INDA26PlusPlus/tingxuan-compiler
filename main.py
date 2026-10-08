@@ -166,7 +166,7 @@ def print_tree(nodes, deep):
                 print()
                 print_tree(i, deep+1)
             else:
-                if k==0:
+                if k==0 or isinstance(j[k-1], list):
                     print("   "*(deep), end="")
                 print(i, end=" ")
         print()
