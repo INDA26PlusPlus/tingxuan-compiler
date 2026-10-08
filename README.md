@@ -6,7 +6,7 @@ welcome to the really! cool! programming language **mathon** \
 ## what can this language do?
 well... it can calculate fibonacci! (i hope)
 it can also take input, output, create variables and those stuff... \
-a list of everything is in the grammar, but i will also list it here: \
+a list of everything is in the grammar, but i will also list it here: 
 
 ### define a variable:
 py: `b = 1`\
