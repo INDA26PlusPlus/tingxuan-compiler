@@ -33,7 +33,7 @@ ma: `!given a`
 py: `print(a)`\
 ma: `!show a`
 
-* as you notice, all statements starts with ! followed by, give/show/induct/assign/let
+* as you notice, all statements starts with ! followed by, given/show/induct/assign/let
 * everything has to be seperated with spaces
 
 ## how does the compiler work?
