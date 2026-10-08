@@ -167,7 +167,7 @@ def print_tree(nodes, deep):
                 print_tree(i, deep+1)
             else:
                 if k==0:
-                    print(" "*(deep), end="")
+                    print("   "*(deep), end="")
                 print(i, end=" ")
         print()
 
